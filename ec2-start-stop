@@ -47,7 +47,7 @@ def get_ec2_instance(ec2,instance_id):
 
 
 def main():
-    if len(sys.argv) > 1 and ( sys.argv[1] != 'start' or sys.argv[1] != 'stop' ):
+    if len(sys.argv) > 1 and ( sys.argv[1] == 'start' or sys.argv[1] == 'stop' ):
         ec2 = connect_to_ec2()
         for inst_id in inst_list:
             inst_obj = get_ec2_instance(ec2,inst_id)
