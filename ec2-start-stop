@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+
+# EC2 Instance Stopper
+
+import boto3
+import os
+import time
+import sys
+
+inst_list = ['i-0d43dfe44b58f7a98', 'i-0b2286cbb4334c83f']
+region = 'us-east-1'
+def start_instance(instance):
+    try:
+        response = instance.start()
+    except Exception, e:
+        print "Unable to start instance. Error: " + str(e)
+        return 1, 1
+    return response, 0
+
+def stop_instance(instance):
+    try:
+        response = instance.stop()
+    except Exception, e:
+        print "Unable to stop instance. Error: " + str(e)
+        return 1, 1
+    return response, 0
+
+def connect_to_ec2():
+    try:
+        ec2 = boto3.resource('ec2', region_name=region)
+    except Exception, e:
+        print "Error connecting to EC2 Region " + region + " -- Error: " + str(e)
+        print "Fatal Error - Quitting"
+        sys.exit(1)
+    return ec2
+
+def get_ec2_instance(ec2,instance_id):
+    try:
+        print "Connecting to Instance: " + str(instance_id)
+        instance = ec2.Instance(instance_id)
+        state = instance.state
+        print "Gathered: " + str(instance)
+    except Exception, e:
+        print "Error connecting to instance  " + str(instance_id) + " Error: " + str(e)
+        return "error"
+    return instance
+
+
+def main():
+    if len(sys.argv) > 1:
+        ec2 = connect_to_ec2()
+        for inst_id in inst_list:
+            inst_obj = get_ec2_instance(ec2,inst_id)
+            if sys.argv[1] == 'stop':
+                print "stopping " + inst_id
+                resp, ec = stop_instance(inst_obj)
+            elif sys.argv[1] == 'start':
+                print "starting " + inst_id
+                resp, ec = start_instance(inst_obj)
+            else:
+                print "invalid parameter passed. Valid are start or stop"
+    else:
+        print "Either stop or start needs to be passed"
+
+
+if __name__ == '__main__':
+    main()
