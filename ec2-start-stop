@@ -47,7 +47,7 @@ def get_ec2_instance(ec2,instance_id):
 
 
 def main():
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 1 and ( sys.argv[1] != 'start' or sys.argv[1] != 'stop' ):
         ec2 = connect_to_ec2()
         for inst_id in inst_list:
             inst_obj = get_ec2_instance(ec2,inst_id)
@@ -57,8 +57,6 @@ def main():
             elif sys.argv[1] == 'start':
                 print "starting " + inst_id
                 resp, ec = start_instance(inst_obj)
-            else:
-                print "invalid parameter passed. Valid are start or stop"
     else:
         print "Either stop or start needs to be passed"
 
