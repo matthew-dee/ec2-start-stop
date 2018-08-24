@@ -12,8 +12,10 @@ Add the instance id's and region to the script. Then just pass `start` or `stop`
             "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": [
+                "ec2:DescribeInstances",
                 "ec2:StartInstances",
-                "ec2:StopInstances"
+                "ec2:StopInstances",
+                "ec2:DescribeInstanceStatus"
             ],
             "Resource": "*"
         }
